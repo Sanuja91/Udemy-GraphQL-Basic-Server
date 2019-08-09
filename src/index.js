@@ -3,8 +3,9 @@ import { GraphQLServer } from "graphql-yoga"
 // Type definitions (schema)
 const typeDefs = `
   type Query {
-    add(a: Float!, b: Float!): Float!
     greeting(name: String, position: String): String!
+    add(numbers: [Float!]!): Float!
+    grades: [Int!]!
     me: User!
     post: Post!
   }
@@ -14,7 +15,6 @@ const typeDefs = `
     name: String!
     email: String!
     age: Int
-
   }
 
   type Post {
@@ -22,13 +22,19 @@ const typeDefs = `
     title: String!
     body: String!
     published: Boolean!
-
   }
 `
 const resolvers = {
   Query: {
     add(parent, args, ctx, info){
-      return args.a + args.b
+      let total = 0
+      args.numbers.forEach(number => {
+        total += number
+      })
+      return total
+    },
+    grades(){
+      return [99, 10, 50]
     },
     greeting(parent, args, ctx, info) {
       if (args.name) return `Hello ${args.name}! You are my ${args.position}`
