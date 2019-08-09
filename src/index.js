@@ -1,28 +1,32 @@
 import { GraphQLServer } from "graphql-yoga"
 
 // Type definitions (schema)
-// Query name hello always returns a strign because of !
+// rating has no ! hence can return null
 const typeDefs = `
-type Query {
-    hello: String!  
-    name: String!
-    location: String!
-    bio: String!
-}
+  type Query {
+    title: String!
+    price: Float!
+    releaseYear: Int!
+    rating: Int
+    inStock: Boolean!
+  }
 `
 const resolvers = {
   Query: {
-    hello() {
-      return "This is my first query!"
+    title() {
+      return "Lord of the Rings"
     },
-    name() {
-      return "My name is Sanuja"
+    price() {
+      return 200.5
     },
-    location() {
-      return "I live in Sri Lanka"
+    releaseYear() {
+      return 2005
     },
-    bio() {
-      return "I am the chosen one"
+    rating() {
+      return 100
+    },
+    inStock() {
+      return false
     }
   }
 }
