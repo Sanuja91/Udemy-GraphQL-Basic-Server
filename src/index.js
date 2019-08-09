@@ -1,32 +1,28 @@
 import { GraphQLServer } from "graphql-yoga"
 
 // Type definitions (schema)
-// rating has no ! hence can return null
 const typeDefs = `
   type Query {
+    me: Post!
+  }
+
+  type Post {
+    id:ID!
     title: String!
-    price: Float!
-    releaseYear: Int!
-    rating: Int
-    inStock: Boolean!
+    body: String!
+    published: Boolean!
+
   }
 `
 const resolvers = {
   Query: {
-    title() {
-      return "Lord of the Rings"
-    },
-    price() {
-      return 200.5
-    },
-    releaseYear() {
-      return 2005
-    },
-    rating() {
-      return 100
-    },
-    inStock() {
-      return false
+    me() {
+      return{
+        id:'123123',
+        title:'Lord of the Rings',
+        body:'Return of the King',
+        published: false
+      }
     }
   }
 }
