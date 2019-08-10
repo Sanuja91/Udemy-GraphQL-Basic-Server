@@ -1,11 +1,52 @@
 import { GraphQLServer } from "graphql-yoga"
 
+// Demo Data
+const users = [
+  {
+    id: "1",
+    name: "Sanuja",
+    email: "sanuja@example.com",
+    age: 27
+  },
+  {
+    id: "2",
+    name: "Sarah",
+    email: "sarah@example.com"
+  },
+  {
+    id: "3",
+    name: "Mike",
+    email: "mike@example.com",
+    age: 13
+  }
+]
+
+const posts = [
+  {
+    id: "1",
+    title: "Lord of the Rings",
+    body: "Best Book",
+    published: true
+  },
+  {
+    id: "2",
+    title: "Harry Potter",
+    body: "Ok Book",
+    published: true
+  },
+  {
+    id: "3",
+    title: "The Hobbit",
+    body: "Brilliant Book",
+    published: false
+  }
+]
+
 // Type definitions (schema)
 const typeDefs = `
   type Query {
-    greeting(name: String, position: String): String!
-    add(numbers: [Float!]!): Float!
-    grades: [Int!]!
+    users(query: String): [User!]!
+    posts(query: String): [Post!]!
     me: User!
     post: Post!
   }
@@ -26,19 +67,21 @@ const typeDefs = `
 `
 const resolvers = {
   Query: {
-    add(parent, args, ctx, info){
-      let total = 0
-      args.numbers.forEach(number => {
-        total += number
+    users(parent, args, ctx, info) {
+      if (!args.query) {
+        return users
+      }
+      return users.filter(user => {
+        return user.name.toLowerCase().includes(args.query.toLowerCase())
       })
-      return total
     },
-    grades(){
-      return [99, 10, 50]
-    },
-    greeting(parent, args, ctx, info) {
-      if (args.name) return `Hello ${args.name}! You are my ${args.position}`
-      else return "Hello!"
+    posts(parent, args, ctx, info){
+      if (!args.query) {
+        return posts
+      }
+      return posts.filter(post => {
+        return post.title.toLowerCase().includes(args.query.toLowerCase())
+      })
     },
     me() {
       return {
