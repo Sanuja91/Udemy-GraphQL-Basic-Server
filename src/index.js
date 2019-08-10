@@ -6,18 +6,21 @@ const users = [
     id: "1",
     name: "Sanuja",
     email: "sanuja@example.com",
-    age: 27
+    age: 27,
+    posts: ["1"]
   },
   {
     id: "2",
     name: "Sarah",
-    email: "sarah@example.com"
+    email: "sarah@example.com",
+    posts: ["2"]
   },
   {
     id: "3",
     name: "Mike",
     email: "mike@example.com",
-    age: 13
+    age: 13,
+    posts: ["3"]
   }
 ]
 
@@ -26,19 +29,22 @@ const posts = [
     id: "1",
     title: "Lord of the Rings",
     body: "Best Book",
-    published: true
+    published: true,
+    author: "1"
   },
   {
     id: "2",
     title: "Harry Potter",
     body: "Ok Book",
-    published: true
+    published: true,
+    author: "2"
   },
   {
     id: "3",
     title: "The Hobbit",
     body: "Brilliant Book",
-    published: false
+    published: false,
+    author: "3"
   }
 ]
 
@@ -56,6 +62,7 @@ const typeDefs = `
     name: String!
     email: String!
     age: Int
+    posts: [Post!]!
   }
 
   type Post {
@@ -63,6 +70,7 @@ const typeDefs = `
     title: String!
     body: String!
     published: Boolean!
+    author: User!
   }
 `
 const resolvers = {
@@ -75,7 +83,7 @@ const resolvers = {
         return user.name.toLowerCase().includes(args.query.toLowerCase())
       })
     },
-    posts(parent, args, ctx, info){
+    posts(parent, args, ctx, info) {
       if (!args.query) {
         return posts
       }
@@ -97,6 +105,21 @@ const resolvers = {
         body: "Return of the King",
         published: false
       }
+    }
+  },
+  // Creating relationships
+  Post: {
+    author(parent, args, ctx, info) {
+      return users.find(user => {
+        return user.id === parent.author
+      })
+    }
+  },
+  User: {
+    posts(parent, args, ctx, info) {
+      return posts.filter(post => {
+        return post.author === parent.id
+      })
     }
   }
 }
