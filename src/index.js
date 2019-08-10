@@ -48,17 +48,33 @@ const posts = [
   }
 ]
 
+const comments = [
+  {
+    id: "4",
+    text: "COMMENT Lord of the Rings",
+  },
+  {
+    id: "5",
+    text: "COMMENT Harry Potter",
+  },
+  {
+    id: "6",
+    text: "COMMENT The Hobbit",
+  }
+]
+
 // Type definitions (schema)
 const typeDefs = `
   type Query {
     users(query: String): [User!]!
     posts(query: String): [Post!]!
+    comments: [Comment!]!
     me: User!
     post: Post!
   }
 
   type User {
-    id:ID!
+    id: ID!
     name: String!
     email: String!
     age: Int
@@ -66,11 +82,16 @@ const typeDefs = `
   }
 
   type Post {
-    id:ID!
+    id: ID!
     title: String!
     body: String!
     published: Boolean!
     author: User!
+  }
+
+  type Comment {
+    id: ID!
+    text: String!
   }
 `
 const resolvers = {
@@ -91,6 +112,9 @@ const resolvers = {
         return post.title.toLowerCase().includes(args.query.toLowerCase())
       })
     },
+    comments(parent, args, ctx, info){
+      return comments
+    },
     me() {
       return {
         id: "12321312",
@@ -107,6 +131,7 @@ const resolvers = {
       }
     }
   },
+
   // Creating relationships
   Post: {
     author(parent, args, ctx, info) {
