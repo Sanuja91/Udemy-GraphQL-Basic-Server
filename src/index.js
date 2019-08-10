@@ -30,21 +30,24 @@ const posts = [
     title: "Lord of the Rings",
     body: "Best Book",
     published: true,
-    author: "1"
+    author: "1",
+    comments: ["4"]
   },
   {
     id: "2",
     title: "Harry Potter",
     body: "Ok Book",
     published: true,
-    author: "2"
+    author: "2",
+    comments: ["5"]
   },
   {
     id: "3",
     title: "The Hobbit",
     body: "Brilliant Book",
     published: false,
-    author: "3"
+    author: "3",
+    comments: ["6"]
   }
 ]
 
@@ -52,17 +55,20 @@ const comments = [
   {
     id: "4",
     text: "COMMENT Lord of the Rings",
-    author: "1"
+    author: "1",
+    post: "1"
   },
   {
     id: "5",
     text: "COMMENT Harry Potter",
-    author: "2"
+    author: "2",
+    post: "2"
   },
   {
     id: "6",
     text: "COMMENT The Hobbit",
-    author: "3"
+    author: "3",
+    post: "3"
   }
 ]
 
@@ -91,12 +97,14 @@ const typeDefs = `
     body: String!
     published: Boolean!
     author: User!
+    comments: [Comment!]!
   }
 
   type Comment {
     id: ID!
     text: String!
     author: User!
+    post: Post!
   }
 `
 const resolvers = {
@@ -143,6 +151,11 @@ const resolvers = {
       return users.find(user => {
         return user.id === parent.author
       })
+    },
+    comments(parent, args, ctx, info){
+      return comments.filter(comment => {
+        return comment.post === parent.id
+      })
     }
   },
   User: {
@@ -161,6 +174,11 @@ const resolvers = {
     author(parent, args, ctx, info) {
       return users.find(user => {
         return user.id === parent.author
+      })
+    },
+    post(parent, args, ctx, info) {
+      return posts.find(post => {
+        return post.id === parent.post
       })
     }
   }
