@@ -52,14 +52,17 @@ const comments = [
   {
     id: "4",
     text: "COMMENT Lord of the Rings",
+    author: "1"
   },
   {
     id: "5",
     text: "COMMENT Harry Potter",
+    author: "2"
   },
   {
     id: "6",
     text: "COMMENT The Hobbit",
+    author: "3"
   }
 ]
 
@@ -79,6 +82,7 @@ const typeDefs = `
     email: String!
     age: Int
     posts: [Post!]!
+    comments: [Comment!]!
   }
 
   type Post {
@@ -92,6 +96,7 @@ const typeDefs = `
   type Comment {
     id: ID!
     text: String!
+    author: User!
   }
 `
 const resolvers = {
@@ -112,7 +117,7 @@ const resolvers = {
         return post.title.toLowerCase().includes(args.query.toLowerCase())
       })
     },
-    comments(parent, args, ctx, info){
+    comments(parent, args, ctx, info) {
       return comments
     },
     me() {
@@ -144,6 +149,18 @@ const resolvers = {
     posts(parent, args, ctx, info) {
       return posts.filter(post => {
         return post.author === parent.id
+      })
+    },
+    comments(parent, args, ctx, info) {
+      return comments.filter(comment => {
+        return comment.author === parent.id
+      })
+    }
+  },
+  Comment: {
+    author(parent, args, ctx, info) {
+      return users.find(user => {
+        return user.id === parent.author
       })
     }
   }
